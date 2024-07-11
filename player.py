@@ -96,7 +96,22 @@ class Players:
 
 
 def display_players():
-    """显示当前选手"""
+    """显示选手信息"""
     st.header("选手信息")
-    players_str = str(st.session_state.players)
-    st.text(players_str)
+    players = st.session_state.players.players
+    # 使用 HTML 和 CSS 来创建一个可滚动的输出框
+    player_str_list = []
+    for idx, player in enumerate(players, start=1):
+        player_str = f"{idx}:&emsp;{player.name}&emsp;&emsp;&emsp;评分:{player.score}&emsp;&emsp;&emsp;备注:{player.view or '无'}"
+        player_str_list.append(player_str)
+
+    players_str = "<br><br>".join(player_str_list)
+
+    st.markdown(
+        f"""
+        <div style="max-height: 200px; overflow-y: auto; border: 1px solid #ddd; padding: 10px;">
+            {players_str}
+        </div>
+        """,
+        unsafe_allow_html=True
+    )

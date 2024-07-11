@@ -3,7 +3,10 @@ import pandas as pd
 from player import (Player)
 from script import (Script)
 from script import (load_scripts_from_csv)
+from rating import (remove_ratings_by_name, load_ratings_from_csv, save_ratings_to_csv)
 import io
+import re
+
 
 class Group:
     def __init__(self, names):
@@ -11,7 +14,7 @@ class Group:
         self.playersNum = len(self.players)
         self.script = Script("", 0)
 
-    def shuffle(self , scripts):
+    def shuffle(self, scripts):
         # 打乱剧本
         if scripts.script_count == 0:
             raise ValueError("没有剧本可供选择")
@@ -69,10 +72,17 @@ class Groups:
                 return
         raise ValueError(f"找不到编号为{group_id}的组")
 
-
     def __str__(self):
         # 返回一个包含所有组信息的字符串，每个组的信息占一行，并包含组编号
         return '\n\n'.join(f"组{group.group_id}: {group}" for group in self.groups)
+
+
+def normalize_spaces(input_string):
+    # 去掉首尾的空格
+    trimmed_string = input_string.strip()
+    # 用正则表达式将连续的空格替换成一个空格
+    normalized_string = re.sub(r'\s+', ' ', trimmed_string)
+    return normalized_string
 
 
 def display_groups():
@@ -80,6 +90,7 @@ def display_groups():
     st.header("小组信息")
     groups_str = str(st.session_state.groups)
     st.text(groups_str)
+
 
 def data_groups():
     """显示当前小组"""
@@ -89,7 +100,7 @@ def data_groups():
     group_count = 0
     for group in groups:
         group_count += 1
-        groups_data.append({"序号":group_count, "选手": ', '.join(group.players), "剧本": group.script.name})
+        groups_data.append({"序号": group_count, "选手": ', '.join(group.players), "剧本": group.script.name})
     return groups_data
 
 
@@ -101,6 +112,7 @@ def add_group():
     if st.button("确定"):
         load_groups_from_csv("datas/groups_data.csv")
         load_scripts_from_csv("datas/scripts_data.csv")
+        player_names = normalize_spaces(player_names)
         group = Group(player_names)
         group.shuffle(st.session_state.scripts_container)
         st.session_state.groups.add_group(group)
@@ -119,11 +131,14 @@ def delete_group():
     group_to_delete = st.number_input("输入要删除小组的序号", min_value=0)
     if st.button("确定"):
         load_groups_from_csv("datas/groups_data.csv")
+        load_ratings_from_csv("datas/ratings_data.csv")
         names = st.session_state.groups.groups[group_to_delete - 1].players
         for name in names:
             st.session_state.players.remove_by_name(name)
+            remove_ratings_by_name(name)
         st.session_state.groups.remove_group(group_to_delete)
         save_groups_to_csv("datas/groups_data.csv")
+        save_ratings_to_csv("datas/ratings_data.csv")
         st.write("小组删除成功")
     display_groups()
 
@@ -149,6 +164,7 @@ def load_groups_from_csv(file_path):
         ""
     except Exception as e:
         st.error(f"加载数据时发生错误: {e}")
+
 
 def save_groups_to_csv(file_path):
     """将 Groups 数据保存到 CSV 文件"""

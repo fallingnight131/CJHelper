@@ -54,7 +54,7 @@ class Scripts:
 
     def __str__(self):
         # 返回所有Script对象的字符串表示，每个对象占一行，并显示剧本ID
-        return '\n'.join(f"{script.script_id}:{str(script)}" for script in self.scripts)
+        return '\n\n'.join(f"{script.script_id}:{str(script)}" for script in self.scripts)
 
     # 示例用法
 
@@ -67,6 +67,7 @@ def display_scripts():
 
 def add_script():
     """添加新剧本"""
+    from group import (normalize_spaces)
     load_scripts_from_csv("datas/scripts_data.csv")
     st.header("添加剧本")
     script_name = st.text_input("输入剧本名字")
@@ -74,6 +75,7 @@ def add_script():
     if st.button("确定"):
         try:
             load_scripts_from_csv("datas/scripts_data.csv")
+            script_name = normalize_spaces(script_name)
             script_player_num = int(script_player_num)  # 确保输入值被转换为整数
             new_script = Script(script_name, script_player_num)
             st.session_state.scripts_container.add_script(new_script)

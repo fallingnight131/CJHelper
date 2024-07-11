@@ -60,29 +60,5 @@ def main():
         download_groups()
 
 
-def download_file():
-    """Download information as a CSV file."""
-    st.header("下载文件")
-
-    # Create some example data
-    data = {'Column 1': [1, 2, 3, 4], 'Column 2': ['艾伦', 20, 30, 40]}
-    df = pd.DataFrame(data)
-
-    # Convert DataFrame to CSV format
-    csv = df.to_csv(index=False)
-
-    # Create a BytesIO object
-    buffer = io.BytesIO()
-    buffer.write(csv.encode())
-    buffer.seek(0)
-
-    st.download_button(
-        label="下载CSV文件",
-        data=buffer,
-        file_name='example.csv',
-        mime='text/csv'
-    )
-
-
 if __name__ == "__main__":
     main()
