@@ -113,6 +113,8 @@ def add_group():
         load_groups_from_csv("datas/groups_data.csv")
         load_scripts_from_csv("datas/scripts_data.csv")
         player_names = normalize_spaces(player_names)
+        if player_names == "":
+            raise ValueError("组员名字不能为空")
         group = Group(player_names)
         group.shuffle(st.session_state.scripts_container)
         st.session_state.groups.add_group(group)

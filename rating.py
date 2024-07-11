@@ -31,7 +31,11 @@ def rate_player():
         load_groups_from_csv("datas/groups_data.csv")
         load_ratings_from_csv("datas/ratings_data.csv")
         rater_name = normalize_spaces(rater_name)
+        if rater_name == "":
+            raise ValueError("打分人名字不能为空")
         rating6 = normalize_spaces(rating6)
+        if rating6 == "":
+            rating6 = "无"
         rating = (rating1 + rating2 + rating3 + rating4 + rating5) * 2
         if player_name is None:
             raise ValueError(f"找不到编号为{player_id}的选手")

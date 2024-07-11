@@ -14,7 +14,7 @@ class Player:
             if rating_key_tuple[0] == self.name:
                 rater_num += 1
                 self.score += ratings[rating_key][0]
-                if ratings[rating_key][1] != "":
+                if ratings[rating_key][1] != "无":
                     if self.view == "":
                         self.view = self.view + str(ratings[rating_key][1]) + "(by " + str(rating_key_tuple[1]) + ") "
                     else:

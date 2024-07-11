@@ -76,6 +76,8 @@ def add_script():
         try:
             load_scripts_from_csv("datas/scripts_data.csv")
             script_name = normalize_spaces(script_name)
+            if script_name == "":
+                raise ValueError("剧本名字不能为空")
             script_player_num = int(script_player_num)  # 确保输入值被转换为整数
             new_script = Script(script_name, script_player_num)
             st.session_state.scripts_container.add_script(new_script)
