@@ -7,3 +7,12 @@
 
 ## 功能
 加入新成员名字，自动分配面试剧本，记录成员评分，最后以csv格式将评分下载到本地
+
+## 运行
+安装完requirements.txt里面的库以后，通过在根目录终端输入
+
+streamlit run randomScript.py
+
+运行程序。
+
+
